@@ -18,6 +18,7 @@ const app = express();
 const port = 3000;
 
 app.set('view engine', 'ejs')
+app.use(express.urlencoded({extended: true}))
 
 app.get('/', (req, res) => {
     res.render('./home')
@@ -32,6 +33,16 @@ app.get('/makecampground', async (req, res) => {
     const camp = new Campground({ title: "My Backyard", description: "super cheap, p much free"})
     await camp.save();
     res.send(camp);
+})
+
+app.get('/campgrounds/new', (req, res) => {
+    res.render('campgrounds/new.ejs');
+})
+
+app.post('/campgrounds', async (req, res) => {
+    const camp = new Campground(req.body.campground);
+    await camp.save()
+    res.redirect(`/campgrounds/${camp._id}`)
 })
 
 app.get('/campgrounds/:id/', async (req, res) => {
