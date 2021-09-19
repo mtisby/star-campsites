@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose"
+import mongoose from "mongoose"
 import { Campground } from "../models/campground.js";
 import { cities } from "./cities.js"
 import {descriptors, places} from "./seedHelpers.js"
