@@ -8,3 +8,5 @@ const CampgroundSchema = new Schema({
     description: String,
     location: String
 })
+
+export {CampgroundSchema}
