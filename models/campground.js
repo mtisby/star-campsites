@@ -1,6 +1,6 @@
-import { mongoose, Schema } from "mongoose"
+import mongoose from "mongoose"
 
-const Schmea = mongoose.Schmea;
+const Schema = mongoose.Schema;
 
 const CampgroundSchema = new Schema({
     title: String,
@@ -9,4 +9,6 @@ const CampgroundSchema = new Schema({
     location: String
 })
 
-export {CampgroundSchema}
+const Campground = mongoose.model('Campground', CampgroundSchema);
+
+export { Campground }

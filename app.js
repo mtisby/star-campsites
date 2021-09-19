@@ -1,11 +1,10 @@
-import express, { application } from "express"
+import express from "express"
 import mongoose from "mongoose"
+import { Campground } from "./models/campground.js";
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
-    useCreateIndex: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
 });
 
 const db = mongoose.connection;
@@ -22,6 +21,12 @@ app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
     res.render('./home')
+})
+
+app.get('/makecampground', async (req, res) => {
+    const camp = new Campground({ title: "My Backyard", description: "super cheap, p much free"})
+    await camp.save();
+    res.send(camp);
 })
 
 app.listen(3000, () => {
