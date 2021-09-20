@@ -1,6 +1,7 @@
 import express from "express"
 import mongoose from "mongoose"
 import { Campground } from "./models/campground.js";
+import methodOverride from "method-override"
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -18,7 +19,8 @@ const app = express();
 const port = 3000;
 
 app.set('view engine', 'ejs')
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }))
+app.use(methodOverride('_method'))
 
 app.get('/', (req, res) => {
     res.render('./home')
@@ -49,6 +51,24 @@ app.get('/campgrounds/:id/', async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
     res.render(`./campgrounds/show.ejs`, {campground})
+})
+
+app.get('/campgrounds/:id/edit', async (req, res) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+    res.render(`./campgrounds/edit.ejs`, {campground})
+})
+
+app.put('/campgrounds/:id', async (req, res) => {
+    const { id } = req.params;
+    Campground.findByIdAndUpdate(id, { ...req.body.campground })
+    res.redirect(`/campgrounds/${campground._id}`)
+})
+
+app.delete('/campgrounds/:id', async (req, res) => {
+    const { id } = req.params;
+    await Campground.findByIdAndDelete(id)
+    res.redirect('/campgrounds');
 })
 
 app.listen(3000, () => {
