@@ -3,6 +3,8 @@ import mongoose from "mongoose"
 import { Campground } from "./models/campground.js";
 import methodOverride from "method-override"
 import ejsMate from 'ejs-mate';
+import {catchAsync} from "./utilis/catchAsync.js"
+import {ExpressError} from "./utilis/ExpressError.js"
 
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
@@ -44,35 +46,35 @@ app.get('/campgrounds/new', (req, res) => {
     res.render('campgrounds/new.ejs');
 })
 
-app.post('/campgrounds', async (req, res) => {
+app.post('/campgrounds', catchAsync(async (req, res) => {
     const camp = new Campground(req.body.campground);
     await camp.save()
     res.redirect(`/campgrounds/${camp._id}`)
-})
+}))
 
-app.get('/campgrounds/:id/', async (req, res) => {
+app.get('/campgrounds/:id/', catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
     res.render(`./campgrounds/show.ejs`, {campground})
-})
+}))
 
-app.get('/campgrounds/:id/edit', async (req, res) => {
+app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
     res.render(`./campgrounds/edit.ejs`, {campground})
-})
+}))
 
-app.put('/campgrounds/:id', async (req, res) => {
+app.put('/campgrounds/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     Campground.findByIdAndUpdate(id, { ...req.body.campground })
     res.redirect(`/campgrounds/${campground._id}`)
-})
+}))
 
-app.delete('/campgrounds/:id', async (req, res) => {
+app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id)
     res.redirect('/campgrounds');
-})
+}))
 
 app.use((err, req, res, next) => {
     res.send('oops somethings wrong love')
