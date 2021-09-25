@@ -1,6 +1,6 @@
-function catchAsync() {
+const catchAsync = func => {
     return (req, res, next) => {
-        catchAsync(req, res, next).catch(next)
+        func(req, res, next).catch(next);
     }
 }
 

@@ -3,8 +3,9 @@ import mongoose from "mongoose"
 import { Campground } from "./models/campground.js";
 import methodOverride from "method-override"
 import ejsMate from 'ejs-mate';
-import {catchAsync} from "./utilis/catchAsync.js"
-import {ExpressError} from "./utilis/ExpressError.js"
+import { catchAsync } from "./utilis/catchAsync.js"
+import { ExpressError } from "./utilis/ExpressError.js"
+import joi from "joi"
 
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
@@ -37,6 +38,13 @@ app.get('/campgrounds', async (req, res) => {
 })
 
 app.get('/makecampground', async (req, res) => {
+    const campgroundSchema = joi.object({
+        campground: joi.object({
+            title: joi.string().required,
+            price: joi.number().required
+        }).required()
+    })
+    const result = campgroundSchema.validate(req.body)
     const camp = new Campground({ title: "My Backyard", description: "super cheap, p much free"})
     await camp.save();
     res.send(camp);
@@ -47,6 +55,7 @@ app.get('/campgrounds/new', (req, res) => {
 })
 
 app.post('/campgrounds', catchAsync(async (req, res) => {
+    if(!req.body.campground) throw new ExpressError('Invalid Campground Data')
     const camp = new Campground(req.body.campground);
     await camp.save()
     res.redirect(`/campgrounds/${camp._id}`)
@@ -76,8 +85,13 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
     res.redirect('/campgrounds');
 }))
 
+app.all('*', (req, res, next) => {
+    next(new ExpressError('Page Not Found', 404))
+})
+
 app.use((err, req, res, next) => {
-    res.send('oops somethings wrong love')
+    const { statusCode = 500, message = "something went wrong" } = err;
+    res.status(statusCode).render('error.ejs', {err})
 })
 
 app.listen(3000, () => {
