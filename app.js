@@ -2,6 +2,8 @@ import express from "express"
 import mongoose from "mongoose"
 import { Campground } from "./models/campground.js";
 import methodOverride from "method-override"
+import ejsMate from 'ejs-mate';
+
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -18,6 +20,7 @@ db.once("open", () => {
 const app = express();
 const port = 3000;
 
+app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
@@ -69,6 +72,10 @@ app.delete('/campgrounds/:id', async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id)
     res.redirect('/campgrounds');
+})
+
+app.use((err, req, res, next) => {
+    res.send('oops somethings wrong love')
 })
 
 app.listen(3000, () => {
