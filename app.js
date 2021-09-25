@@ -38,13 +38,6 @@ app.get('/campgrounds', async (req, res) => {
 })
 
 app.get('/makecampground', async (req, res) => {
-    const campgroundSchema = joi.object({
-        campground: joi.object({
-            title: joi.string().required,
-            price: joi.number().required
-        }).required()
-    })
-    const result = campgroundSchema.validate(req.body)
     const camp = new Campground({ title: "My Backyard", description: "super cheap, p much free"})
     await camp.save();
     res.send(camp);
@@ -55,7 +48,18 @@ app.get('/campgrounds/new', (req, res) => {
 })
 
 app.post('/campgrounds', catchAsync(async (req, res) => {
-    if(!req.body.campground) throw new ExpressError('Invalid Campground Data')
+    const campgroundSchema = joi.object({
+        campground: joi.object({
+            title: joi.string().required,
+            price: joi.number().required.min(0)
+        }).required()
+    })
+    const{error} = campgroundSchema.validate(req.body)
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(result.error.details, 400)
+    }
+
     const camp = new Campground(req.body.campground);
     await camp.save()
     res.redirect(`/campgrounds/${camp._id}`)
