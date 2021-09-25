@@ -28,6 +28,22 @@ app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 
+const validateCampground = (req, res, next) => {
+    const campgroundSchema = joi.object({
+        campground: joi.object({
+            title: joi.string().required,
+            price: joi.number().required.min(0)
+        }).required()
+    })
+    const{error} = campgroundSchema.validate(req.body)
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(result.error.details, 400)
+    }
+    next()
+}
+
+
 app.get('/', (req, res) => {
     res.render('./home')
 })
@@ -47,23 +63,11 @@ app.get('/campgrounds/new', (req, res) => {
     res.render('campgrounds/new.ejs');
 })
 
-app.post('/campgrounds', catchAsync(async (req, res) => {
-    const campgroundSchema = joi.object({
-        campground: joi.object({
-            title: joi.string().required,
-            price: joi.number().required.min(0)
-        }).required()
-    })
-    const{error} = campgroundSchema.validate(req.body)
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(result.error.details, 400)
-    }
-
+app.post('/campgrounds', validateCampground(catchAsync(async (req, res) => {
     const camp = new Campground(req.body.campground);
     await camp.save()
     res.redirect(`/campgrounds/${camp._id}`)
-}))
+})))
 
 app.get('/campgrounds/:id/', catchAsync(async (req, res) => {
     const { id } = req.params;
