@@ -5,7 +5,6 @@ import methodOverride from "method-override"
 import ejsMate from 'ejs-mate';
 import { catchAsync } from "./utilis/catchAsync.js"
 import { ExpressError } from "./utilis/ExpressError.js"
-import joi from "joi"
 import { campgroundSchema } from "./schemas.js"
 
 
