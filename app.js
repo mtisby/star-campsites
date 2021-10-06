@@ -7,6 +7,7 @@ import ejsMate from 'ejs-mate';
 import { catchAsync } from "./utilis/catchAsync.js"
 import { ExpressError } from "./utilis/ExpressError.js"
 import { campgroundSchema } from "./schemas.js"
+import { reviewSchema } from "./schemas.js"
 
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
@@ -32,6 +33,16 @@ app.use(methodOverride('_method'))
 const validateCampground = (req, res, next) => {
     
     const{error} = campgroundSchema.validate(req.body)
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(result.error.details, 400)
+    }
+    next(error)
+}
+
+const validateReview = (req, res, next) => {
+    
+    const{error} = reviewSchema.validate(req.body)
     if (error) {
         const msg = error.details.map(el => el.message).join(',')
         throw new ExpressError(result.error.details, 400)
@@ -71,14 +82,15 @@ app.get('/campgrounds/:id/', catchAsync(async (req, res) => {
     res.render(`./campgrounds/show.ejs`, {campground})
 }))
 
-app.post('/campgrounds/:id/reviews', catchAsync(async (req, res) => {
+app.post('/campgrounds/:id/reviews', validateReview(catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
     const review = new Review(req.body.review)
     campground.reviews.push(review);
     await review.save();
     await campground.save();
-}))
+    res.redirect(`/campgrounds/${campground._id}`);
+})))
 
 app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
     const { id } = req.params;
