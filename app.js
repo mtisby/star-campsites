@@ -1,6 +1,7 @@
 import express from "express"
 import mongoose from "mongoose"
 import { Campground } from "./models/campground.js";
+import { Review } from "./models/review.js";
 import methodOverride from "method-override"
 import ejsMate from 'ejs-mate';
 import { catchAsync } from "./utilis/catchAsync.js"
@@ -68,6 +69,15 @@ app.get('/campgrounds/:id/', catchAsync(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
     res.render(`./campgrounds/show.ejs`, {campground})
+}))
+
+app.post('/campgrounds/:id/reviews', catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+    const review = new Review(req.body.review)
+    campground.reviews.push(review);
+    await review.save();
+    await campground.save();
 }))
 
 app.get('/campgrounds/:id/edit', catchAsync(async (req, res) => {
