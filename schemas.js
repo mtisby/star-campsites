@@ -17,6 +17,4 @@ const reviewSchema = Joi.object({
     }).required()
 });
 
-export { campgroundSchema }
-
-export { reviewSchema }
+export { campgroundSchema, reviewSchema }
