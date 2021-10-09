@@ -5,7 +5,7 @@ import { catchAsync } from "../utilis/catchAsync.js"
 import { ExpressError } from "../utilis/ExpressError.js"
 
 
-var router = express.Router();
+var router = express.Router({mergeParams: true});
 
 router.post('/', catchAsync(async (req, res) => {
     const{error} = reviewSchema.validate(req.body)
