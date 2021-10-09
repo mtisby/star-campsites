@@ -8,6 +8,12 @@ import { ExpressError } from "../utilis/ExpressError.js"
 var router = express.Router();
 
 router.post('/reviews', validateReview(catchAsync(async (req, res) => {
+    const{error} = reviewSchema.validate(req.body)
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(result.error.details, 400)
+    }
+    
     const { id } = req.params;
     const campground = await Campground.findById(id);
     const review = new Review(req.body.review)
