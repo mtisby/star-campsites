@@ -5,10 +5,12 @@ import ejsMate from 'ejs-mate';
 import { ExpressError } from "./utilis/ExpressError.js"
 import { campgrounds } from "./routes/campgrounds.js"
 import { reviews } from "./routes/reviews.js"
+import { session } from "express-session"
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false
 });
 
 const db = mongoose.connection;
@@ -25,6 +27,16 @@ app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
+app.use(express.static(__dirname + '/public'));
+
+const sessionConfig = {
+    secret: 'oopsmysecret',
+    resave: false,
+    saveUninitialized: true
+}
+app.use(session(sessionConfig))
+
+
 app.use('/campgrounds', campgrounds)
 app.use('/campgrounds/:id/reviews', reviews)
 
