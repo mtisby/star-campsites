@@ -6,6 +6,7 @@ import { ExpressError } from "./utilis/ExpressError.js"
 import { campgrounds } from "./routes/campgrounds.js"
 import { reviews } from "./routes/reviews.js"
 import { session } from "express-session"
+import { flash } from "connect-flash"
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -32,9 +33,21 @@ app.use(express.static(__dirname + '/public'));
 const sessionConfig = {
     secret: 'oopsmysecret',
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
 }
 app.use(session(sessionConfig))
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+})
 
 
 app.use('/campgrounds', campgrounds)
