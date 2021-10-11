@@ -61,4 +61,5 @@ router.delete('/:id', catchAsync(async (req, res) => {
     res.redirect('/campgrounds');
 }))
 
-export { router }
+const campgrounds = router
+export {campgrounds}

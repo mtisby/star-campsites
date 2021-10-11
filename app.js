@@ -5,13 +5,15 @@ import ejsMate from 'ejs-mate';
 import { ExpressError } from "./utilis/ExpressError.js"
 import { campgrounds } from "./routes/campgrounds.js"
 import { reviews } from "./routes/reviews.js"
-import { session } from "express-session"
-import { flash } from "connect-flash"
+import session from "express-session"
+import flash from "connect-flash"
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
 });
 
 const db = mongoose.connection;
@@ -23,6 +25,9 @@ db.once("open", () => {
 
 const app = express();
 const port = 3000;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs')
