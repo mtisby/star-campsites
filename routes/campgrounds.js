@@ -3,6 +3,7 @@ import { Campground } from "../models/campground.js";
 import { campgroundSchema } from "../schemas.js"
 import { catchAsync } from "../utilis/catchAsync.js"
 import { ExpressError } from "../utilis/ExpressError.js"
+import { isLoggedIn } from "../middleware.js";
 
 
 var router = express.Router();
@@ -13,11 +14,11 @@ router.get('/', async (req, res) => {
 })
 
 
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
     res.render('campgrounds/new.ejs');
 })
 
-router.post('/', catchAsync(async (req, res) => {
+router.post('/', isLoggedIn, catchAsync(async (req, res) => {
     const{error} = campgroundSchema.validate(req.body)
     if (error) {
         const msg = error.details.map(el => el.message).join(',')
@@ -38,7 +39,7 @@ router.get('/:id/', catchAsync(async (req, res) => {
     res.render('campgrounds/show.ejs', { campground });
 }))
 
-router.get('/:id/edit', catchAsync(async (req, res) => {
+router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id)
     if (!campground) {
         req.flash('error', 'Cannot find that campground!');
@@ -47,19 +48,19 @@ router.get('/:id/edit', catchAsync(async (req, res) => {
     res.render('campgrounds/edit.ejs', { campground });
 }))
 
-router.put('/:id', catchAsync(async (req, res) => {
+router.put('/:id', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     Campground.findByIdAndUpdate(id, { ...req.body.campground })
     req.flash('success', 'Successfully updated campground!');
     res.redirect(`/campgrounds/${campground._id}`)
 }))
 
-router.delete('/:id', catchAsync(async (req, res) => {
+router.delete('/:id', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id)
     req.flash('success', 'Successfully deleted campground')
     res.redirect('/campgrounds');
 }))
 
-const campgrounds = router
-export {campgrounds}
+const campgroundRoutes = router
+export {campgroundRoutes}
