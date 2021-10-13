@@ -3,6 +3,7 @@ import { Review } from "../models/review.js";
 import { reviewSchema } from "../schemas.js"
 import { catchAsync } from "../utilis/catchAsync.js"
 import { ExpressError } from "../utilis/ExpressError.js"
+import { Campground } from "../models/campground.js";
 
 
 var router = express.Router({mergeParams: true});
@@ -14,12 +15,13 @@ router.post('/', catchAsync(async (req, res) => {
         throw new ExpressError(result.error.details, 400)
     }
 
-    const { id } = req.params;
-    const campground = await Campground.findById(id);
-    const review = new Review(req.body.review)
+    const campground = await Campground.findById(req.params.id);
+    const review = new Review(req.body.review);
+    review.author = req.user._id;
     campground.reviews.push(review);
     await review.save();
     await campground.save();
+    req.flash('success', 'Created new review!');
     res.redirect(`/campgrounds/${campground._id}`);
 }))
 
