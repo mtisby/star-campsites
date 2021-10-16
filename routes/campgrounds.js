@@ -6,13 +6,18 @@ import { isLoggedIn } from "../middleware.js";
 // controllers
 import { campgroundsInd, campgroundsNew, campgroundsCreate, campgroundsShow } from "../controllers/campgrounds.js"
 import { campgroundsEdit, campgroundsUpdate, campgroundsDelete } from "../controllers/campgrounds.js"
+// multipart form data
+import multer from 'multer';
 
+import { storage } from "../cloudinary/index.js";
+const upload = multer({ storage });
 
 var router = express.Router();
 
 router.route('/')
     .get(catchAsync(campgroundsInd))
-    .post(isLoggedIn, catchAsync(campgroundsCreate))
+    .post(isLoggedIn, upload.array('image'), catchAsync(campgroundsCreate))
+
 
 router.get(isLoggedIn, campgroundsNew)
 
