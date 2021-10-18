@@ -8,7 +8,7 @@ const upload = multer({ storage });
 
 const Campground = require('../models/campground.cjs');
 
-console.log(`hello this is isLoggedIn from controllers ${typeof isLoggedIn}`)
+console.log(`hello this is storage from controllers ${typeof storage}`)
 
 var router = express.Router();
 
