@@ -15,6 +15,7 @@ const campgroundsCreate = async (req, res) => {
     const{error} = campgroundSchema.validate(req.body)
     if (error) {
         const msg = error.details.map(el => el.message).join(',')
+        console.log(msg)
         throw new ExpressError(result.error.details, 400)
     }
     const camp = new Campground(req.body.campground);
