@@ -3,7 +3,7 @@ import express from "express"
 import passport from "passport"
 
 // middleware
-import { catchAsync } from "../utilis/catchAsync.js"
+import catchAsync from "../utilis/catchAsync.cjs"
 
 // controllers
 import { registerForm, register, loginForm, login, logout} from "../controllers/users.js"

@@ -8,8 +8,9 @@ import express from "express"
 import mongoose from "mongoose"
 import methodOverride from "method-override"
 import ejsMate from 'ejs-mate';
-import { ExpressError } from "./utilis/ExpressError.js"
-import { campgroundRoutes } from "./routes/campgrounds.js"
+// import { ExpressError } from "./utilis/ExpressError.js"
+import * as ExpressError from "./utilis/ExpressError.cjs"
+import campgroundRoutes from "./routes/campgrounds.cjs"
 import { reviewRoutes } from "./routes/reviews.js"
 import { userRoutes } from "./routes/user.js"
 import session from "express-session"
@@ -30,6 +31,9 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
     console.log("Database connected");
 });
+
+console.log(`hello this is app.js campgroundRoutes ${campgroundRoutes} and type: ${typeof campgroundRoutes}`)
+console.log(`hello this is app.js reviewRoutes ${reviewRoutes} and type: ${typeof reviewRoutes}`)
 
 
 const app = express();
