@@ -3,15 +3,24 @@ import { Review } from "./review.js";
 
 const Schema = mongoose.Schema;
 
+const ImageSchema = new Schema({
+    url: String,
+    filename: String
+});
+
+ImageSchema.virtual('thumbnail').get(function () {
+    return this.url.replace('/upload', '/upload/w_200');
+});
+
 const CampgroundSchema = new Schema({
     title: String,
-    image: String,
+    images: [ImageSchema],
     price: Number,
     description: String,
     location: String,
     author: {
         type: Schema.Types.ObjectId,
-        ref: "User"
+        ref: 'User'
     },
     reviews: [
         {
@@ -19,15 +28,15 @@ const CampgroundSchema = new Schema({
             ref: 'Review'
         }
     ]
-})
+});
 
 CampgroundSchema.post('findOneAndDelete', async function (doc) {
     if (doc) {
-        await Review.remove({
+        await Review.deleteMany({
             _id: {
                 $in: doc.reviews
             }
-         })
+        })
     }
 })
 

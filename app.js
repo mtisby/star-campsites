@@ -1,3 +1,9 @@
+import dotenv from "dotenv"
+
+if (process.env.NODE_ENV !== "productions") {
+    dotenv.config()
+}
+
 import express from "express"
 import mongoose from "mongoose"
 import methodOverride from "method-override"
@@ -13,7 +19,6 @@ import { dirname } from 'path';
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
 import { User } from './models/user.js'
-
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,

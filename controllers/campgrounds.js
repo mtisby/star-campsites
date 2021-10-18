@@ -4,7 +4,7 @@ import { campgroundSchema } from "../schemas.js"
 
 const campgroundsInd = async (req, res) => {
     const campgrounds = await Campground.find({});
-    res.render('./campgrounds/index.ejs', {campgrounds})
+    res.render('campgrounds/index.ejs', {campgrounds})
 }
 
 const campgroundsNew  = (req, res) => {
