@@ -32,10 +32,6 @@ db.once("open", () => {
     console.log("Database connected");
 });
 
-console.log(`hello this is app.js campgroundRoutes ${campgroundRoutes} and type: ${typeof campgroundRoutes}`)
-console.log(`hello this is app.js reviewRoutes ${reviewRoutes} and type: ${typeof reviewRoutes}`)
-
-
 const app = express();
 const port = 3000;
 

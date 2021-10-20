@@ -7,7 +7,23 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Home Page</h1>
+    <header class="mb-auto">
+        <div>
+            <h3 class="float-md-left mb-0">Star Campsites</h3>
+            <nav class="nav nav-masthead justify-content-center float-md-right">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a class="nav-link" href="/campgrounds">Campgrounds</a>
+                <% if(!currentUser) { %>
+                <a class="nav-link" href="/login">Login</a>
+                <a class="nav-link" href="/register">Register</a>
+                <% } else { %>
+                <a class="nav-link" href="/logout">Logout</a>
+                <% } %>
+            </nav>
+        </div>
+    </header>
+
+    <h1>Welcome to Star Campsites</h1>
     
 </body>
 </html>

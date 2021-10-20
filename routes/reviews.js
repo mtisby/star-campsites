@@ -5,8 +5,6 @@ import express from "express"
 // import { catchAsync } from "../utilis/catchAsync.js"
 import catchAsync from "../utilis/catchAsync.cjs"
 
-console.log(`HELLO ${typeof catchAsync}`)
-
 // controllers
 import * as reviews from "../controllers/reviews.cjs"
 

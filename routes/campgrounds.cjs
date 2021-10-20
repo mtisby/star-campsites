@@ -8,8 +8,6 @@ const upload = multer({ storage });
 
 const Campground = require('../models/campground.cjs');
 
-console.log(`hello this is storage from controllers ${typeof storage}`)
-
 var router = express.Router();
 
 router.route('/')
@@ -29,9 +27,6 @@ router.route('/:id')
 
 router.get('/:id/edit', isLoggedIn, catchAsync(campgrounds.renderEditForm))
 
-
-
-console.log(`hello this is router from routes ${router} and type ${typeof router}`)
 module.exports = router;
 
 

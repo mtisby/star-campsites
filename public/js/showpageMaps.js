@@ -1,11 +1,10 @@
-
-mapboxgl.accessToken = mapToken;
-const map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/light-v10', // stylesheet location
-    center: campground.geometry.coordinates, // starting position [lng, lat]
-    zoom: 10 // starting zoom
+mapboxgl.accessToken = 'pk.eyJ1IjoiZGV2ZWxvcGVybXQiLCJhIjoiY2t1eDV2cGFyNnBvYzJ2bzM4N2xueG5ubSJ9.ykxzSpxL2KyqN-Ryvz-pmw';
+var map = new mapboxgl.Map({
+  container: 'mapsLarge',
+  style: 'mapbox://styles/mapbox/streets-v11'
 });
+
+let campground = campgroundSend
 
 new mapboxgl.Marker()
     .setLngLat(campground.geometry.coordinates)

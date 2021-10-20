@@ -18,5 +18,3 @@ module.exports.reviewSchema = Joi.object({
         body: Joi.string().required()
     }).required()
 })
-
-console.log(`hello i am schema from schema campground schema ${this.campgroundSchema}`)
