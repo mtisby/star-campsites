@@ -8,7 +8,6 @@ import express from "express"
 import mongoose from "mongoose"
 import methodOverride from "method-override"
 import ejsMate from 'ejs-mate';
-// import { ExpressError } from "./utilis/ExpressError.js"
 import * as ExpressError from "./utilis/ExpressError.cjs"
 import campgroundRoutes from "./routes/campgrounds.cjs"
 import { reviewRoutes } from "./routes/reviews.js"
@@ -20,8 +19,15 @@ import { dirname } from 'path';
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
 import { User } from './models/user.js'
+import mongoSanitize from 'express-mongo-sanitize'
+import helmet from "helmet"
+import MongoStore from "connect-mongo"
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+
+const dbUrl = 'mongodb://localhost:27017/yelp-camp';
+// process.env.DB_URL;
+
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
@@ -43,8 +49,20 @@ app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 app.use(express.static(__dirname + '/public'));
+app.use(mongoSanitize({
+    replaceWith: "_"
+}))
+
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'squirrel'
+    }
+});
 
 const sessionConfig = {
+    store,
     secret: 'oopsmysecret',
     resave: false,
     saveUninitialized: true,
@@ -54,8 +72,58 @@ const sessionConfig = {
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
+
 app.use(session(sessionConfig))
 app.use(flash());
+app.use(helmet())
+
+
+const scriptSrcUrls = [
+    "https://cdn.jsdelivr.net/",
+    "https://api.tiles.mapbox.com/",
+    "https://api.mapbox.com/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://cdn.jsdelivr.net",
+    "https://stackpath.bootstrapcdn.com/"
+];
+const styleSrcUrls = [
+    "https://kit-free.fontawesome.com/",
+    "https://cdn.jsdelivr.net/",
+    "https://api.mapbox.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://fonts.googleapis.com/",
+    "https://use.fontawesome.com/",
+];
+const connectSrcUrls = [
+    "https://api.mapbox.com/",
+    "https://a.tiles.mapbox.com/",
+    "https://b.tiles.mapbox.com/",
+    "https://events.mapbox.com/",
+];
+const fontSrcUrls = [];
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                "blob:",
+                "data:",
+                "https://res.cloudinary.com/dr0ofxgkz/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                "https://images.unsplash.com/",
+            ],
+            fontSrc: ["'self'", ...fontSrcUrls],
+        },
+    })
+);
+
+
 
 app.use(passport.initialize())
 app.use(passport.session())
