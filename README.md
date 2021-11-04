@@ -5,7 +5,7 @@ and review/rate other campsites
 
 This web app was created using the JavaScript framework Express. 
     
- Check out the fully deployed web app <a href="https://protected-scrubland-89262.herokuapp.com/cheflavor">here</a>
+ Check out the fully deployed web app <a href="https://secure-gorge-90469.herokuapp.com/">here</a>
 </p>
 
 <h2>Tools Used</h2>
@@ -42,5 +42,5 @@ This web app was created using the JavaScript framework Express.
 
 <h5>APIs Used</h5>
 <ul>
-    <li></li>
+    <li>Mapbox</li>
 </ul>
