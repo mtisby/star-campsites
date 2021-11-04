@@ -24,8 +24,9 @@ import helmet from "helmet"
 import MongoStore from "connect-mongo"
 
 
-const dbUrl = 'mongodb://localhost:27017/star-campsites';
+const dbUrl = process.env.DB_URL;
 // process.env.DB_URL;
+//'mongodb://localhost:27017/star-campsites'
 
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,

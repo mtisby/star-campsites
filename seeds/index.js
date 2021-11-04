@@ -4,7 +4,10 @@ import { cities } from "./cities.js"
 import {descriptors, places} from "./seedHelpers.js"
 import { images } from "./imageSeedHelpers.js"
 
-mongoose.connect('mongodb://localhost:27017/star-campsites');
+const dbUrl = process.env.DB_URL;
+//'mongodb://localhost:27017/star-campsites'
+
+mongoose.connect(dbUrl);
 
 console.log(images.length)
 
