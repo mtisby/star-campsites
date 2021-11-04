@@ -53,6 +53,7 @@ app.use(mongoSanitize({
 }))
 
 const secret = process.env.SECRET;
+
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
@@ -159,6 +160,6 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error.ejs', {err})
 })
 
-app.listen(3000, () => {
+app.listen(port, () => {
     console.log(`listening on : ${port}`)
 })
