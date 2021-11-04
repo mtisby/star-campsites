@@ -1,4 +1,4 @@
-<h1><img src="https://res.cloudinary.com/dr0ofxgkz/image/upload/v1636059911/star-campsites/251190867_575363867069889_943899103526195064_n_1_1_xyzmce.png" width="65px"> Star Campsite</h1>
+<h1><img src="https://res.cloudinary.com/dr0ofxgkz/image/upload/v1636068605/star-campsites/251190867_575363867069889_943899103526195064_n_1_1_gowtgw.png" width="65px"> Star Campsite</h1>
 
 <p>This project is a web app created for users to add, view, review, and edit campsites. Once users login/register they are able to add new campsites 
 and review/rate other campsites
