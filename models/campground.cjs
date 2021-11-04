@@ -3,8 +3,6 @@ const Review = require('./review.cjs')
 const Schema = mongoose.Schema;
 
 
-// https://res.cloudinary.com/douqbebwk/image/upload/w_300/v1600113904/YelpCamp/gxgle1ovzd2f3dgcpass.png
-
 const ImageSchema = new Schema({
     url: String,
     filename: String
@@ -64,7 +62,7 @@ CampgroundSchema.post('findOneAndDelete', async function (doc) {
     }
 })
 
-module.exports = mongoose.model('Campground', CampgroundSchema)
+module.exports = mongoose.model('Campground', CampgroundSchema);
 
 
 /*
