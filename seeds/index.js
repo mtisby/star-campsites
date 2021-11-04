@@ -3,9 +3,10 @@ import Campground from "../models/campground.cjs";
 import { cities } from "./cities.js"
 import {descriptors, places} from "./seedHelpers.js"
 import { images } from "./imageSeedHelpers.js"
+import dotenv from "dotenv"
+dotenv.config({ path: ".env" })
 
-const dbUrl = process.env.DB_URL;
-//'mongodb://localhost:27017/star-campsites'
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/star-campsites';
 
 mongoose.connect(dbUrl);
 

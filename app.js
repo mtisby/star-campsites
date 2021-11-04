@@ -24,9 +24,7 @@ import helmet from "helmet"
 import MongoStore from "connect-mongo"
 
 
-const dbUrl = process.env.DB_URL;
-// process.env.DB_URL;
-//'mongodb://localhost:27017/star-campsites'
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/star-campsites';
 
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
@@ -40,7 +38,7 @@ db.once("open", () => {
 });
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3060;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -54,16 +52,18 @@ app.use(mongoSanitize({
     replaceWith: "_"
 }))
 
+const secret = process.env.SECRET;
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
     crypto: {
-        secret: 'squirrel'
+        secret
     }
 });
 
 const sessionConfig = {
     store,
+    secret,
     secret: 'oopsmysecret',
     resave: false,
     saveUninitialized: true,
