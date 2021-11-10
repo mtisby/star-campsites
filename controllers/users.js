@@ -10,14 +10,15 @@ const register = async (req, res) => {
         const user = new User({ email, username });
         const registeredUser = await User.register(user, password);
         req.login(registeredUser, error => {
-            if (err) {
-                return next(err)
+            if (error) {
+                return next(error)
             } else {
                 req.flash('success', 'Welcome to YelpCamp')
                 res.redirect('/campgrounds') 
             }
         })
     } catch (e) {
+        console.log(e)
         req.flash('error', e.message);
         res.redirect('register')
     }
