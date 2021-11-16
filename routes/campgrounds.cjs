@@ -13,10 +13,6 @@ var router = express.Router();
 router.route('/')
     .get(catchAsync(campgrounds.index))
     .post(isLoggedIn, upload.array('image'), catchAsync(campgrounds.createCampground))
-    // .post(upload.array('image'), (req, res) => {
-    //     console.log(req);
-    //     res.send('suck my fucking idck')
-    // })
 
 router.get('/new', isLoggedIn, campgrounds.renderNewForm)
 
